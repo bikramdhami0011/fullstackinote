@@ -185,6 +185,7 @@ router.post('/login', [
     }
 
     const passwordCompare = await bcrypt.compare(password, user.password);
+    
     if (!passwordCompare) {
       success = false
       return res.status(400).json({ success, error: "Please try to login with correct credentials" });
@@ -193,8 +194,11 @@ router.post('/login', [
     const data = {
       user: {
         id: user.id
+       
       }
+      
     }
+    // console.log(data)
     const authtoken = jwt.sign(data, JWT_SECRET);
     success = true;
     res.json({ success, authtoken })
@@ -209,15 +213,28 @@ router.post('/login', [
 
 
 // ROUTE 3: Get loggedin User Details using: POST "/api/auth/getuser". Login required
+// router.post('/getuser', fetchuser,  async (req, res) => {
+
+//   try {
+//    const userId = req.user.id;
+//     const user = await User.findById(userId).select("-password")
+//     res.send(user)
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).send("Internal Server Error");
+//   }
+// })
 router.post('/getuser', fetchuser,  async (req, res) => {
 
+ 
   try {
-   const Iduser = req.user.id;
-    const user = await User.findById(Iduser).select("-password")
+    let userId =req.user.id;
+  
+    const user = await User.findById(userId).select("-password")
     res.send(user)
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 })
-module.exports = router
+module.exports=router;
